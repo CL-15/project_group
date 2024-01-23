@@ -30,35 +30,34 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
         f"HIGHEST OVERHEAD: {highest_overhead['category']} EXPENSE: {highest_overhead['amount']}"
     ]
     
-    # Add the highest cash increment and decrement information to the summary lines
-    summary_lines.append(
-        f"HIGHEST CASH INCREMENT: DAY: {cash_analysis['day_of_highest_increment']}, "
-        f"AMOUNT: SGD{cash_analysis['highest_increment']}"
-    )
-    summary_lines.append(
-        f"HIGHEST CASH DECREMENT: DAY: {cash_analysis['day_of_highest_decrement']}, "
-        f"AMOUNT: SGD{-cash_analysis['highest_decrement']}"  # Assuming the decrement is a negative number
-    )
-    
-    # Add the highest profit surplus and deficit information to the summary lines
-    summary_lines.append(
-        f"HIGHEST PROFIT SURPLUS: DAY: {profit_loss_analysis['day_of_highest_surplus']}, "
-        f"AMOUNT: SGD{profit_loss_analysis['highest_surplus']}"
-    )
-    summary_lines.append(
-        f"HIGHEST PROFIT DEFICIT: DAY: {profit_loss_analysis['day_of_highest_deficit']}, "
-        f"AMOUNT: SGD{-profit_loss_analysis['highest_deficit']}"  # Assuming the deficit is a negative number
-    )
-    
-    # Add information about the trend of net profit
-    if profit_loss_analysis['always_increasing']:
-        summary_lines.append("NET PROFIT TREND: ALWAYS INCREASING")
-    elif profit_loss_analysis['always_decreasing']:
-        summary_lines.append("NET PROFIT TREND: ALWAYS DECREASING")
+    # Handle cash analysis summary
+    cash_trend = "INCREASING" if cash_analysis['always_increasing'] else "DECREASING" if cash_analysis['always_decreasing'] else "FLUCTUATING"
+    summary_lines.append(f"CASH ON HAND TREND: {cash_trend}")
+    if cash_analysis['always_increasing'] or cash_analysis['always_decreasing']:
+        increment_decrement = 'INCREMENT' if cash_analysis['always_increasing'] else 'DECREMENT'
+        day = cash_analysis['day_of_highest_increment'] if cash_analysis['always_increasing'] else cash_analysis['day_of_highest_decrement']
+        amount = cash_analysis['amount_highest_increment'] if cash_analysis['always_increasing'] else cash_analysis['amount_highest_decrement']
+        summary_lines.append(f"HIGHEST CASH {increment_decrement}: DAY: {day}, AMOUNT: SGD{amount}")
     else:
-        summary_lines.append("NET PROFIT TREND: FLUCTUATING")
-
-    # Combine all lines into a single string separated by newlines
+        # Ensure 'top_deficits' key exists before iterating
+        if 'top_deficits' in cash_analysis:
+            for deficit in cash_analysis['top_deficits']:
+                summary_lines.append(f"DEFICIT DAY: {deficit['day']}, AMOUNT: SGD{deficit['deficit']}")
+    
+    # Handle profit and loss analysis summary
+    profit_trend = "INCREASING" if profit_loss_analysis['always_increasing'] else "DECREASING" if profit_loss_analysis['always_decreasing'] else "FLUCTUATING"
+    summary_lines.append(f"NET PROFIT TREND: {profit_trend}")
+    if profit_loss_analysis['always_increasing'] or profit_loss_analysis['always_decreasing']:
+        increment_decrement = 'SURPLUS' if profit_loss_analysis['always_increasing'] else 'DEFICIT'
+        day = profit_loss_analysis['day_of_highest_surplus'] if profit_loss_analysis['always_increasing'] else profit_loss_analysis['day_of_highest_deficit']
+        amount = profit_loss_analysis['highest_surplus'] if profit_loss_analysis['always_increasing'] else profit_loss_analysis['highest_deficit']
+        summary_lines.append(f"HIGHEST NET PROFIT {increment_decrement}: DAY: {day}, AMOUNT: SGD{amount}")
+    else:
+        # Ensure 'top_deficits' key exists before iterating
+        if 'top_deficits' in profit_loss_analysis:
+            for deficit in profit_loss_analysis['top_deficits']:
+                summary_lines.append(f"DEFICIT DAY: {deficit['day']}, AMOUNT: SGD{deficit['deficit']}")
+    
     return '\n'.join(summary_lines)
 
 def write_to_summary_report(content, file_path='summary_report.txt'):
@@ -91,7 +90,5 @@ def main():
     # Write the formatted summary report content to the file
     write_to_summary_report(summary_content)
 
-# Entry point of the script
 if __name__ == "__main__":
     main()
-
