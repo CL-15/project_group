@@ -12,6 +12,7 @@ def analyze_cash_on_hand(data):
     highest_decrement = 0
     day_of_highest_decrement = None
     deficits = []
+    differences = []  # List to keep track of daily differences
 
     # Initialize flags for determining if cash on hand is always increasing or decreasing
     always_increasing = True
@@ -22,6 +23,7 @@ def analyze_cash_on_hand(data):
     for i in range(1, len(data)):
         current_amount = int(data[i]['Cash On Hand'])
         difference = current_amount - previous_amount
+        differences.append(difference)  # Store the difference for each day
 
         # Identify the highest increment and decrement
         if difference > highest_increment:
@@ -43,8 +45,8 @@ def analyze_cash_on_hand(data):
         # Update the previous cash on hand amount for the next iteration
         previous_amount = current_amount
 
-    # Sort the list of deficits to find the top 3 highest deficits (largest negative differences)
-    top_deficits = sorted(deficits, key=lambda x: x['deficit'])[:3]
+    # List to keep all deficit days
+    all_deficits = [{'day': data[i]['Day'], 'deficit': difference} for i, difference in enumerate(differences) if difference < 0]
 
     # Construct the results dictionary
     result = {
@@ -55,9 +57,13 @@ def analyze_cash_on_hand(data):
         'day_of_highest_decrement': day_of_highest_decrement if always_decreasing else None,
         'amount_highest_decrement': highest_decrement if always_decreasing else None,
         'fluctuating': not always_increasing and not always_decreasing,
-        'deficits': deficits if not always_increasing and not always_decreasing else [],
-        'top_deficits': top_deficits if not always_increasing and not always_decreasing else []
+        'deficits': deficits,  # This includes all deficit days
+        'top_deficits': sorted(deficits, key=lambda x: x['deficit'])[:3],  # Top 3 deficits
+        'all_deficits': all_deficits,  # This is the new line, including all deficits
+        'deficit_days': all_deficits
     }
 
     return result
+
+
 

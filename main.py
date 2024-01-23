@@ -39,9 +39,9 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
         amount = cash_analysis['amount_highest_increment'] if cash_analysis['always_increasing'] else cash_analysis['amount_highest_decrement']
         summary_lines.append(f"HIGHEST CASH {increment_decrement}: DAY: {day}, AMOUNT: SGD{amount}")
     else:
-        # Ensure 'top_deficits' key exists before iterating
-        if 'top_deficits' in cash_analysis:
-            for deficit in cash_analysis['top_deficits']:
+        # Check if 'deficit_days' key exists before iterating
+        if 'deficit_days' in cash_analysis:
+            for deficit in cash_analysis['deficit_days']:
                 summary_lines.append(f"DEFICIT DAY: {deficit['day']}, AMOUNT: SGD{deficit['deficit']}")
     
     # Handle profit and loss analysis summary
@@ -53,12 +53,13 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
         amount = profit_loss_analysis['highest_surplus'] if profit_loss_analysis['always_increasing'] else profit_loss_analysis['highest_deficit']
         summary_lines.append(f"HIGHEST NET PROFIT {increment_decrement}: DAY: {day}, AMOUNT: SGD{amount}")
     else:
-        # Ensure 'top_deficits' key exists before iterating
-        if 'top_deficits' in profit_loss_analysis:
-            for deficit in profit_loss_analysis['top_deficits']:
+        # Check if 'deficit_days' key exists before iterating
+        if 'deficit_days' in profit_loss_analysis:
+            for deficit in profit_loss_analysis['deficit_days']:
                 summary_lines.append(f"DEFICIT DAY: {deficit['day']}, AMOUNT: SGD{deficit['deficit']}")
-    
+
     return '\n'.join(summary_lines)
+
 
 def write_to_summary_report(content, file_path='summary_report.txt'):
     """
