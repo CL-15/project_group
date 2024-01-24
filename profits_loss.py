@@ -1,36 +1,37 @@
+def get_deficit_amount(deficit):
+    return deficit['deficit']
 def analyze_profit_loss(data):
     """
-    Analyzes profit and loss data to handle three scenarios:
-    - If net profit is always increasing, find the day and amount of the highest increment.
-    - If net profit is always decreasing, find the day and amount of the highest decrement.
-    - If net profit fluctuates, list all days when a deficit occurs and the top 3 highest deficits.
+    Analyzes profit and loss data to categorize trends and identify significant changes.
+    
+    - If increasing, finds the day and amount of the highest increment.
+    - If decreasing, finds the day and amount of the highest decrement.
+    - If fluctuating, lists all days with a deficit and the top 3 highest deficits.
     """
-    # Initialize variables for tracking net profit trends and amounts
+    # Initialize variables to track the net profit increments and decrements
     highest_increment = 0
-    day_of_highest_increment = None
+    day_of_highest_increment = 0
     highest_decrement = 0
-    day_of_highest_decrement = None
+    day_of_highest_decrement = 0
     deficits = []
 
-    # Initialize flags for always increasing or decreasing
+    # Initialize flags for net profit trend
     always_increasing = True
     always_decreasing = True
 
-    # Start with the first day's net profit as the previous value to compare against
-    previous_net_profit = float(data[0]['Net Profit'])
-
-    # Iterate over each day's data
+    # Loop through each day to calculate the difference in net profit
+    previous_net_profit = int(data[0]['Net Profit'])
     for i in range(1, len(data)):
-        current_net_profit = float(data[i]['Net Profit'])
+        current_net_profit = int(data[i]['Net Profit'])
         profit_difference = current_net_profit - previous_net_profit
 
-        # Check for always increasing/decreasing trends
+        # Check for always increasing or decreasing
         if profit_difference < 0:
             always_increasing = False
-        if profit_difference > 0:
+        elif profit_difference > 0:
             always_decreasing = False
 
-        # Check for highest increment/decrement
+        # Update highest increment and decrement
         if profit_difference > highest_increment:
             highest_increment = profit_difference
             day_of_highest_increment = data[i]['Day']
@@ -38,29 +39,30 @@ def analyze_profit_loss(data):
             highest_decrement = profit_difference
             day_of_highest_decrement = data[i]['Day']
 
-        # Track all deficit days and amounts
+        # Accumulate deficits
         if profit_difference < 0:
-            deficits.append({'day': data[i]['Day'], 'deficit': profit_difference})
+            deficits.append({'day': data[i]['Day'], 'deficit': abs(profit_difference)})
 
-        # Update the previous net profit for the next day's comparison
         previous_net_profit = current_net_profit
 
-    # Sort the deficits to find the top 3. Note that since these are deficits, they will be negative numbers, 
-    # so we sort them in descending order to get the 3 largest (most negative) values.
-    top_deficits = sorted(deficits, key=lambda x: x['deficit'], reverse=True)[:3]
+    # If cash on hand is fluctuating, sort deficits to find the top 3 highest deficits
+    if not always_increasing and not always_decreasing:
+        top_deficits = sorted(deficits, key=get_deficit_amount, reverse=True)[:3]
+    else:
+        top_deficits = []
+
 
     # Prepare the analysis result
     analysis_result = {
-        'always_increasing': always_increasing,
-        'day_of_highest_increment': day_of_highest_increment if always_increasing else None,
-        'amount_highest_increment': highest_increment if always_increasing else None,
-        'always_decreasing': always_decreasing,
-        'day_of_highest_decrement': day_of_highest_decrement if always_decreasing else None,
-        'amount_highest_decrement': highest_decrement if always_decreasing else None,
+        'trend': 'increasing' if always_increasing else 'decreasing' if always_decreasing else 'fluctuating',
+        'highest_increment': {'day': day_of_highest_increment, 'amount': highest_increment} if always_increasing else None,
+        'highest_decrement': {'day': day_of_highest_decrement, 'amount': highest_decrement} if always_decreasing else None,
         'deficit_days': deficits if not always_increasing and not always_decreasing else [],
-        'top_3_deficits': top_deficits  # Now this line ensures that top_3_deficits is always present
+        'top_deficits': top_deficits
     }
 
     return analysis_result
+
+
 
 
