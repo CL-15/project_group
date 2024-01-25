@@ -47,8 +47,23 @@ def analyze_cash_on_hand(data):
         previous_day_cash = current_day_cash
 
     # If cash on hand is fluctuating, sort deficits to find the top 3 highest deficits
+    # If cash on hand is fluctuating, sort deficits to find the top 3 highest deficits
     if not always_increasing and not always_decreasing:
-        top_deficits = sorted(deficits, key=get_deficit_amount, reverse=True)[:3]
+        # Make a copy of the deficits list for finding top deficits
+        deficits_copy = deficits[:]
+        top_deficits = []
+        for _ in range(3):
+            highest_current_deficit = {'day': None, 'deficit': -float('inf')}
+            highest_deficit_index = None
+
+            for index, deficit in enumerate(deficits_copy):
+                if deficit['deficit'] > highest_current_deficit['deficit']:
+                    highest_current_deficit = deficit
+                    highest_deficit_index = index
+
+            if highest_deficit_index is not None:
+                top_deficits.append(highest_current_deficit)
+                deficits_copy.pop(highest_deficit_index)
     else:
         top_deficits = []
 

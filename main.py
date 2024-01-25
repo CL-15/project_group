@@ -46,9 +46,11 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
         f"DAY: {cash_analysis['top_deficits'][2]['day']}, AMOUNT: SGD{cash_analysis['top_deficits'][2]['deficit']}"
         )
     elif cash_analysis['trend'] == 'increasing':
-        summary_lines.append(f"HIGHEST CASH INCREMENT: DAY: {cash_analysis['highest_increment']['day']}, AMOUNT: SGD{cash_analysis['highest_increment']['amount']}")
+        summary_lines.append(f"[CASH SURPLUS] CASH ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY")
+        summary_lines.append(f"[HIGHEST CASH SURPLUS] DAY: {cash_analysis['highest_increment']['day']}, AMOUNT: SGD{cash_analysis['highest_increment']['amount']}")
     elif cash_analysis['trend'] == 'decreasing':
-        summary_lines.append(f"HIGHEST CASH DECREMENT: DAY: {cash_analysis['highest_decrement']['day']}, AMOUNT: SGD{cash_analysis['highest_decrement']['amount']}")
+        summary_lines.append(f"[CASH DEFICIT] CASH ON EACH DAY IS LOWER THAN THE PREVIOUS DAY")
+        summary_lines.append(f"[HIGHEST CASH DEFICIT] DAY: {cash_analysis['highest_decrement']['day']}, AMOUNT: SGD{cash_analysis['highest_decrement']['amount']}")
 
     # Handle profit and loss analysis summary
     if profit_loss_analysis['trend'] == 'fluctuating':
@@ -66,9 +68,11 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
         f"DAY: {profit_loss_analysis['top_deficits'][2]['day']}, AMOUNT: SGD{profit_loss_analysis['top_deficits'][2]['deficit']}"
         )
     elif profit_loss_analysis['trend'] == 'increasing':
-        summary_lines.append(f"HIGHEST NET PROFIT INCREMENT: DAY: {profit_loss_analysis['highest_increment']['day']}, AMOUNT: SGD{profit_loss_analysis['highest_increment']['amount']}")
+        summary_lines.append(f"[NET PROFIT SURPLUS] NET PROFIT ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY")
+        summary_lines.append(f"[HIGHEST NET PROFIT SURPLUS] DAY: {profit_loss_analysis['highest_increment']['day']}, AMOUNT: SGD{profit_loss_analysis['highest_increment']['amount']}")
     elif profit_loss_analysis['trend'] == 'decreasing':
-        summary_lines.append(f"HIGHEST NET PROFIT DECREMENT: DAY: {profit_loss_analysis['highest_decrement']['day']}, AMOUNT: SGD{profit_loss_analysis['highest_decrement']['amount']}")
+        summary_lines.append(f"[NET PROFIT DEFICIT] NET PROFIT ON EACH DAY IS LOWER THAN PREVIOUS DAY")
+        summary_lines.append(f"[HIGHEST NET PROFIT DEFICIT] DAY: {profit_loss_analysis['highest_decrement']['day']}, AMOUNT: SGD{profit_loss_analysis['highest_decrement']['amount']}")
 
     return '\n'.join(summary_lines)
 
