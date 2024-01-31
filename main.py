@@ -33,7 +33,7 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
     A formatted string representing the summary report.
     """
     summary_lines = [
-        f"[HIGHEST OVERHEAD] {highest_overhead['category']} EXPENSE: {highest_overhead['amount']}%"
+        f"[HIGHEST OVERHEAD] {highest_overhead['category'].upper()}: {highest_overhead['amount']}%"
     ]
     
     # Handle cash analysis summary
