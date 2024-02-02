@@ -57,14 +57,14 @@ def format_summary_report(highest_overhead, cash_analysis, profit_loss_analysis)
 
         # Identify whether there is a cash surplus by matching it with the increasing trend
     elif cash_analysis['trend'] == 'increasing':
-        summary_lines.append(f"[CASH SURPLUS] CASH ON EACH DAY IS HIGHER THAN PREVIOUS DAY")
+        summary_lines.append(f"[CASH SURPLUS] CASH ON EACH DAY IS HIGHER THAN THE PREVIOUS DAY")
         # List down the day of the highest cash surplus and the amount.
         summary_lines.append(f"[HIGHEST CASH SURPLUS] DAY: {cash_analysis['highest_increment']['day']}, "
                              f"AMOUNT: SGD{abs(cash_analysis ['highest_increment']['amount'])}") # abs to ensure not negative signs
 
         # Identify whether there is a cash deficit by matching it with the decreasing trend 
     elif cash_analysis['trend'] == 'decreasing':
-        summary_lines.append(f"[CASH DEFICIT] CASH ON EACH DAY IS LOWER THAN PREVIOUS DAY")
+        summary_lines.append(f"[CASH DEFICIT] CASH ON EACH DAY IS LOWER THAN THE PREVIOUS DAY")
         # List down the day of the highest cash deficit and the amount
         summary_lines.append(f"[HIGHEST CASH DEFICIT] DAY: {cash_analysis['highest_decrement']['day']}, "
                              f"AMOUNT: SGD{abs(cash_analysis['highest_decrement']['amount'])}") # abs to ensure not negative signs
