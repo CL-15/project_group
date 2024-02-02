@@ -1,6 +1,6 @@
 Student, Student ID
-Caleb Lim, S10259952B
-Cara Yeo, S1025697C
-Bo Yang Lu, S10257136F
-Langdon Yeo, S10257529D
-Syafiq Afandi, S10256152G
+Lim Han Lin Caleb, S10259952B
+Cara Yeo Suan Yee , S1025697C
+Lu Boyang, S10257136F
+Langdon Yeo Zhiyu, S10257529D
+Muhammad Syafiq Muhammad Afandi, S10256152G
